@@ -1,7 +1,7 @@
 //g++ LibSodiumTest.cpp -lsodium LibSodiumWrapper.cpp
 
 #include "sodium.h"
-#include "LibSodiumWrapper.h"
+#include "LibSalt.h"
 #include <iostream>
 
 void Test() {

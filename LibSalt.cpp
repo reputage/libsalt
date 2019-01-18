@@ -2,7 +2,7 @@
 // g++ -dynamiclib -o libsodium_wrapper.dylib LibSodiumWrapper.cpp -lsodium
 
 #include "sodium.h"
-#include "LibSodiumWrapper.h"
+#include "LibSalt.h"
 
 extern "C" int nacl_randombytes_random() {
 
