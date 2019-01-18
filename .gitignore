@@ -2,4 +2,5 @@
 /dist
 
 *.dylib
+*.dll
 *.exe
