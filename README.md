@@ -17,16 +17,26 @@ Wrapper works for Mac for the following LibSodium functions:
 
 ## Installation
 
-Install libsodium using Homebrew:
+The project depends on libsodium. (For Mac) This can be downloaded using Homebrew:
 
 ``` brew install libsodium ```
 
-## Builds
+To build the binaries locally use the make file:
 
-The following are simple commands to build the wrapper:
+``` make libsalt ```
 
-Building Wrapper
-g++ -dynamiclib -o libsodium_wrapper.dylib LibSodiumWrapper.cpp -lsodium
+This is will generate ```LibSalt.dylib```. This along with LibSalt.cs is need to use the library.
 
-Building Test
-g++ LibSodiumTest.cpp -lsodium LibSodiumWrapper.cpp
+## Tests
+
+To build tests:
+
+``` make build_tests ```
+
+To run tests:
+
+``` make run_tests ```
+
+## Usage
+
+** TODO **
