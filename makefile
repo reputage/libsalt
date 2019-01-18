@@ -7,10 +7,11 @@ CC = g++
 #  -Wall        turns on most, but not all, compiler warnings
 CFLAGS = -dynamiclib -g -Wall 
 TARGET = LibSalt
+INCLUDE = -I/include -lsodium
 TESTS = SimpleTest
 
 libsalt: 
-	$(CC) $(CFLAGS) -o $(TARGET).dylib $(TARGET).cpp -lsodium
+	$(CC) $(CFLAGS) -o dist/$(TARGET).dylib $(TARGET).cpp $(INCLUDE) 
 
 test_cpp:
 	$(CC) $(TARGET)Test.cpp -lsodium $(TARGET).cpp
@@ -24,3 +25,7 @@ run_tests:
 clean: 
 	rm -f $(TARGET).dylib $(TESTS).exe
 	
+# Building Wrapper
+#g++ -dynamiclib -o libsodium_wrapper.dylib LibSodiumWrapper.cpp -lsodium
+#Building Test
+#g++ LibSodiumTest.cpp -lsodium LibSodiumWrapper.cpp 
