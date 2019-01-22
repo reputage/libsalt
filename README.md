@@ -27,7 +27,7 @@ This is will generate ```LibSalt.dylib``` in the ```\dist``` director. This alon
 
 To build and run tests for bindings:
 
-``` make tests ```
+``` make tests ``` 
 
 ## Usage
 

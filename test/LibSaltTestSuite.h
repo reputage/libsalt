@@ -2,6 +2,7 @@
 
 #include "sodium.h"
 #include "../LibSalt.h"
+#include <string>
 #include <iostream>
 #include <typeinfo>
 #include <cxxtest/TestSuite.h>
@@ -17,6 +18,19 @@ unsigned char seed2[randombytes_SEEDBYTES] = {
   0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
   0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f
 };
+
+void print_in_hex_format(unsigned char input[], int size) {
+  for (int i = 0; i < size; ++i) {
+    printf("%02X", input[i]);
+  }
+}
+
+void TS_ASSERT_DIFFERENT_DATA(unsigned char x[], unsigned char y[], int size) {
+  bool isDifferent = false;
+  for(int i = 0; i < size; i++)
+    isDifferent = (x[i] == y[i]) ? isDifferent : true;
+  TS_ASSERT(isDifferent);
+}
 
 class LibSaltTestSuite : public CxxTest::TestSuite
 {
@@ -57,31 +71,68 @@ class LibSaltTestSuite : public CxxTest::TestSuite
       nacl_randombytes_buf_deterministic(buf2, size, seed);
       nacl_randombytes_buf_deterministic(buf3, size, seed2);
 
+      /*
+      std::cout << std::endl;
+      std::cout << "Buf1: ";
+      print_in_hex_format(buf, 16);
+      std::cout << std::endl;
+      std::cout << "Buf2: ";
+      print_in_hex_format(buf, 16);
+      std::cout << std::endl;
+      */
+
       TS_ASSERT_EQUALS(sizeof buf, size);
       TS_ASSERT_EQUALS(sizeof buf2, size); 
       TS_ASSERT_EQUALS(sizeof buf3, size); 
 
       // Test for generating same randombyte arrays with same seeds
-      TS_ASSERT_EQUALS(buf, buf2); 
+      TS_ASSERT_SAME_DATA(buf, buf2, size); 
 
       // Test for generating different randombyte arrays with different seeds
-      TS_ASSERT_DIFFERS(buf, buf3);
-      TS_ASSERT_DIFFERS(buf2, buf3);
+      TS_ASSERT_DIFFERENT_DATA(buf, buf3, size);
+      TS_ASSERT_DIFFERENT_DATA(buf2, buf3, size); 
     } 
 
     void test_crypto_sign_keypair(void) {
-      std::cout << "\n Testing randombytes_crypto_sign_keypair() .....";
+      std::cout << "\n Testing crypto_sign_keypair() .....";
 
       unsigned char pk[crypto_sign_PUBLICKEYBYTES];
       unsigned char sk[crypto_sign_SECRETKEYBYTES];
+      unsigned char pk2[crypto_sign_PUBLICKEYBYTES];
+      unsigned char sk2[crypto_sign_SECRETKEYBYTES];
       nacl_crypto_sign_keypair(pk, sk);
+      nacl_crypto_sign_keypair(pk2, sk2);
 
+      // Test for proper pk and sk array sizes
       TS_ASSERT_EQUALS(sizeof pk, crypto_sign_PUBLICKEYBYTES);
       TS_ASSERT_EQUALS(sizeof sk, crypto_sign_SECRETKEYBYTES);
+
+      // Test for generating different random pk/sk  
+      TS_ASSERT_DIFFERENT_DATA(pk, pk2, crypto_sign_PUBLICKEYBYTES);
+      TS_ASSERT_DIFFERENT_DATA(sk, sk2, crypto_sign_SECRETKEYBYTES);
+    }
+    
+    void test_crypto_sign_seed_keypair(void) {
+      std::cout << "\n Testing crypto_sign_seed() .....";
+
+      unsigned char pk[crypto_sign_PUBLICKEYBYTES];
+      unsigned char sk[crypto_sign_SECRETKEYBYTES];
+      unsigned char pk2[crypto_sign_PUBLICKEYBYTES];
+      unsigned char sk2[crypto_sign_SECRETKEYBYTES];
+      nacl_crypto_sign_seed_keypair(pk, sk, seed);
+      nacl_crypto_sign_seed_keypair(pk2, sk2, seed);
+
+      // Test for proper pk and sk array sizes
+      TS_ASSERT_EQUALS(sizeof pk, crypto_sign_PUBLICKEYBYTES);
+      TS_ASSERT_EQUALS(sizeof sk, crypto_sign_SECRETKEYBYTES);
+
+      // Test for generating same pk/sk for same seed
+      TS_ASSERT_SAME_DATA(pk, pk2, crypto_sign_PUBLICKEYBYTES);
+      TS_ASSERT_SAME_DATA(sk, sk2, crypto_sign_SECRETKEYBYTES);
     }
 
     void test_crypto_sign(void) {
-      std::cout << "\n Testing randombytes_crypto_sign() .....";
+      std::cout << "\n Testing crypto_sign() .....";
 
       unsigned char * message = (unsigned char *) "test";
       int mlen = 4;
@@ -102,7 +153,7 @@ class LibSaltTestSuite : public CxxTest::TestSuite
     }
 
     void test_crypto_sign_open(void) {
-      std::cout << "\n Testing randombytes_crypto_sign_open() .....";
+      std::cout << "\n Testing crypto_sign_open() .....";
 
       unsigned char * message = (unsigned char *) "test";
       int mlen = 4;
@@ -130,11 +181,11 @@ class LibSaltTestSuite : public CxxTest::TestSuite
       TS_ASSERT_EQUALS(success, 0);
 
       // Test for unsucessful decoding signed message with incorrect private key
-      TS_ASSERT_DIFFERS(success, 0);
+      TS_ASSERT_DIFFERS(success2, 0);
     }
 
     void test_crypto_sign_bytes(void) {
-      std::cout << "\n Testing randombytes_crypto_sign_bytes() .....";
+      std::cout << "\n Testing crypto_sign_bytes() .....";
 
       int bytes = nacl_crypto_sign_BYTES();
       TS_ASSERT_EQUALS(bytes, crypto_sign_BYTES);

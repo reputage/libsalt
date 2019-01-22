@@ -29,12 +29,21 @@ build_dll:
 	mcs -t:library $(TARGET).cs
 
 # -----------------------------------------------------------------------------
+# EXAMPLES
+# complies and builds cpp bindings test executable
+example:
+	$(CC) -o examples/$(TARGET)Example.out examples/$(TARGET)Example.cpp $(TARGET).cpp $(INCLUDE)
+	./examples/$(TARGET)Example.out 
+
+# -----------------------------------------------------------------------------
 # TESTS
 
-# complies and builds cpp bindings test executable
-test_cpp:
-	$(CC) -o test/$(TARGET)Test.out test/$(TARGET)Test.cpp $(TARGET).cpp $(INCLUDE)
-	./test/$(TARGET)Test.out 
+# runs cxxtest (make sure to install cxxtest with `brew install cxxtest`)
+tests:
+	cxxtestgen --error-printer -o runner.cpp test/$(TARGET)TestSuite.h 
+	g++ -o runner runner.cpp $(CXXTEST) $(TARGET).cpp $(INCLUDE) 
+	./runner
+	make clean_tests
 
 # compiles and builds executable for C# tests with LabSalt.cs 
 build_tests:
@@ -47,13 +56,6 @@ build_tests_with_dll:
 # runs C# test
 run_tests:
 	mono test/$(TESTS).exe
-
-# runs cxxtest (make sure to install cxxtest with `brew install cxxtest`)
-tests:
-	cxxtestgen --error-printer -o runner.cpp test/$(TARGET)TestSuite.h 
-	g++ -o runner runner.cpp $(CXXTEST) $(TARGET).cpp $(INCLUDE) 
-	./runner
-	make clean_tests
 
 # -----------------------------------------------------------------------------
 # CLEAN
@@ -68,7 +70,7 @@ clean_test_cpp:
 	rm -f $(TARGET)Test.out
 
 # clean and removes complied files for test runner
-clean_testrunner:
+clean_tests:
 	rm -f runner runner.cpp
 
 # Building Wrapper

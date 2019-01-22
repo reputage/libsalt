@@ -31,21 +31,20 @@ extern "C" void nacl_randombytes_buf_deterministic(unsigned char buf[], int size
   randombytes_buf_deterministic(buf, size, seed);
 }
 
-extern "C" int nacl_crypto_sign_BYTES() {
-  
-  if(sodium_init() < 0) {
-    return -1;
-  }
-
-  return crypto_sign_bytes();
-}
-
 extern "C" int nacl_crypto_sign_keypair(unsigned char pk[], unsigned char sk[]) {
   if(sodium_init() < 0) {
     return -1;
   }
 
   return crypto_sign_keypair(pk, sk);
+}
+
+extern "C" int nacl_crypto_sign_seed_keypair(unsigned char pk[], unsigned char sk[], unsigned char seed[]) {
+  if(sodium_init() < 0) {
+    return -1;
+  }
+
+  return crypto_sign_seed_keypair(pk, sk, seed);
 }
 
 extern "C" int nacl_crypto_sign(unsigned char sm[], const unsigned char m[], unsigned long long mlen, const unsigned char sk[]) {
@@ -66,4 +65,13 @@ extern "C" int nacl_crypto_sign_open(unsigned char m[], const unsigned char sm[]
 
   unsigned long long mlen_p;
   return crypto_sign_open(m, &mlen_p, sm, smlen, pk);
+}
+
+extern "C" int nacl_crypto_sign_BYTES() {
+  
+  if(sodium_init() < 0) {
+    return -1;
+  }
+
+  return crypto_sign_bytes();
 }
