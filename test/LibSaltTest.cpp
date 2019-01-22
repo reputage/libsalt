@@ -25,7 +25,7 @@ void Test() {
   randombytes_buf_deterministic(out, sizeof out, seed);
   std::cout << "randombytes_buf_deterministic Buffer:";
   for (int i = 0; i < sizeof out; ++i) {
-      printf("%02x", out[i]);
+    printf("%02x", out[i]);
   }
   std::cout << std::endl;
 }

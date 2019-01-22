@@ -50,8 +50,8 @@ run_tests:
 
 # runs cxxtest (make sure to install cxxtest with `brew install cxxtest`)
 tests:
-	cxxtestgen --error-printer -o runner.cpp test/$(TARGET)TestSuite.h
-	g++ -o runner -I$(CXXTEST) runner.cpp
+	cxxtestgen --error-printer -o runner.cpp test/$(TARGET)TestSuite.h 
+	g++ -o runner runner.cpp $(CXXTEST) $(TARGET).cpp $(INCLUDE) 
 	./runner
 	make clean_tests
 

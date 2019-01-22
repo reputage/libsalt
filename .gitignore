@@ -4,3 +4,6 @@
 *.dylib
 *.dll
 *.exe
+
+runner
+runner.cpp
