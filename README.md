@@ -29,23 +29,23 @@ To build and run tests for bindings:
 
 ``` make tests ``` 
 
-## Usage
+## API Usage
 
 LibSalt supports functions for:
 
 - Generating random data
+  - [randombytes_random](#randombytes_random)
+  - [randombytes](#randombytes)
+  - [randombytes_buf_deterministic](#randombytes_buf_deterministic)
 - Public key pair generation
+  - [crypto_sign_keypair](#crypto_sign_keypair)
+  - [crypto_sign_seed_keypair](#crypto_sign_seed_keypair)
 - Public-key signature generation
+  - [crypto_sign](#crypto_sign)
+  - [crypto_sign_open](#crypto_sign_open)
+  - [crypto_sign_bytes](#crypto_sign_bytes)
 
-These are the currenlty supprted libsodium functions:
-
-- randombytes_random
-- randombytes
-- randombytes_buf_deterministic
-- crypto_sign_bytes
-- crypto_sign_keypair
-- crypto_sign
-- crypto_sign_open
+## API Docs
 
 ### randombytes_random
 
