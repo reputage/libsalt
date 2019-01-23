@@ -14,7 +14,7 @@ CC = g++
 CFLAGS = -dynamiclib -g -Wall 
 TARGET = LibSalt
 INCLUDE = -I/usr/local/include/sodium -lsodium -I/libsalt
-TESTS = LabSaltTest
+TESTS = LabSaltTest 
 CXXTEST = -I/usr/local/include/cxxtest
 
 # -----------------------------------------------------------------------------
