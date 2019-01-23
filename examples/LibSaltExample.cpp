@@ -4,8 +4,8 @@
 #include "../LibSalt.h"
 #include <iostream>
 
-#define MESSAGE (const unsigned char *) "test"
-#define MESSAGE_LEN 4
+#define MESSAGE (const unsigned char *) "example"
+#define MESSAGE_LEN 7
 
 void example_init() {
   if(sodium_init() < 0) {
@@ -18,6 +18,11 @@ void print_in_hex_format(unsigned char input[], int size) {
     printf("%02X", input[i]);
   }
 }
+
+std::string to_string(unsigned char input[], int size) {
+  std::string str(input, input + size / sizeof input[0] );
+  return str;
+} 
 
 void example_randombytes_random() {
   std::cout << "\nExample: randombytes_random()" << std::endl;
@@ -126,7 +131,7 @@ void example_crypto_sign_seed_keypair() {
   print_in_hex_format(sk, crypto_sign_SECRETKEYBYTES);
   std::cout << std::endl;
 
-  std::cout << "Keypair One: ";
+  std::cout << "Keypair Two: ";
   std::cout << "pk: ";
   print_in_hex_format(pk2, crypto_sign_PUBLICKEYBYTES);
   std::cout << std::endl;
@@ -137,7 +142,7 @@ void example_crypto_sign_seed_keypair() {
 
 void example_crypto_sign() { 
   std::cout << "\nExample: example_crypto_sign()" << std::endl;
-
+  
   unsigned char pk[crypto_sign_PUBLICKEYBYTES];
   unsigned char sk[crypto_sign_SECRETKEYBYTES];
   unsigned char pk2[crypto_sign_PUBLICKEYBYTES];
@@ -146,28 +151,35 @@ void example_crypto_sign() {
   nacl_crypto_sign_keypair(pk2, sk2);
 
   unsigned char signed_message[crypto_sign_BYTES + MESSAGE_LEN];
-  unsigned long long signed_message_len;
+  unsigned long long signed_message_len = crypto_sign_BYTES + MESSAGE_LEN;
   nacl_crypto_sign(signed_message, MESSAGE, MESSAGE_LEN, sk);
 
-  std::cout << "Message signed with pk: "; 
+  std::cout << "Public Key: "; 
   print_in_hex_format(pk, crypto_sign_PUBLICKEYBYTES);
   std::cout << std::endl;
 
+  std::cout << "Signed Message: "; 
+  std::cout << to_string(signed_message, signed_message_len) << std::endl;
+
   unsigned char unsigned_message[MESSAGE_LEN];
-  unsigned long long unsigned_message_len;
+  unsigned char unsigned_message2[MESSAGE_LEN];
+  unsigned long long unsigned_message_len = MESSAGE_LEN;
   int success = nacl_crypto_sign_open(unsigned_message, signed_message, signed_message_len, pk);
-  int success2 = nacl_crypto_sign_open(unsigned_message, signed_message, signed_message_len, pk2);
+  int success2 = nacl_crypto_sign_open(unsigned_message2, signed_message, signed_message_len, pk2);  
+  
+  std::cout << "Unsigned Message: "; 
+  std::cout << to_string(unsigned_message, MESSAGE_LEN) << std::endl;
 
   std::cout << "Signature Verification for pk: "; 
   print_in_hex_format(pk, crypto_sign_PUBLICKEYBYTES);
   std::cout << std::endl;
-
+  
   if(success == 0)
     std::cout << "Valid Signature" << std::endl;
   else
     std::cout << "Invalid signature" << std::endl;
   
-  std::cout << "Signature Verification: "; 
+  std::cout << "Signature Verification for pk2: "; 
   print_in_hex_format(pk2, crypto_sign_PUBLICKEYBYTES);
   std::cout << std::endl;
 
@@ -175,78 +187,6 @@ void example_crypto_sign() {
     std::cout << "Valid signature" << std::endl;
   else
     std::cout << "Invalid signature" << std::endl;
-}
-
-void Test4() {
-  unsigned char pk[crypto_sign_PUBLICKEYBYTES];
-  unsigned char sk[crypto_sign_SECRETKEYBYTES];
-  nacl_crypto_sign_keypair(pk, sk);
-  std::cout << "Sign Keypair: ";
-  print_in_hex_format(pk, crypto_sign_PUBLICKEYBYTES);
-  print_in_hex_format(sk, crypto_sign_SECRETKEYBYTES);
-
-  unsigned char pk2[crypto_sign_PUBLICKEYBYTES];
-  unsigned char sk2[crypto_sign_SECRETKEYBYTES];
-  nacl_crypto_sign_keypair(pk2, sk2);
-  std::cout << "Sign Keypair: ";
-  print_in_hex_format(pk2, crypto_sign_PUBLICKEYBYTES);
-  print_in_hex_format(sk2, crypto_sign_SECRETKEYBYTES);
-
-  unsigned char signed_message[crypto_sign_BYTES + MESSAGE_LEN];
-  unsigned long long signed_message_len;
-  nacl_crypto_sign(signed_message, MESSAGE, MESSAGE_LEN, sk);
-
-  crypto_sign(signed_message, &signed_message_len,
-              MESSAGE, MESSAGE_LEN, sk);
-  unsigned char unsigned_message[MESSAGE_LEN];
-  unsigned long long unsigned_message_len;
-  int success = crypto_sign_open(unsigned_message, &unsigned_message_len,
-                       signed_message, signed_message_len, pk);
-  if(success == 0)
-    std::cout << "Correct signature" << std::endl;
-  else
-    std::cout << "InCorrect signature" << std::endl;
-  
-  int success2 = crypto_sign_open(unsigned_message, &unsigned_message_len,
-                       signed_message, signed_message_len, pk2);
-  if(success2 == 0)
-    std::cout << "Correct signature" << std::endl;
-  else
-    std::cout << "InCorrect signature" << std::endl;
-
-}
-
-void Test5() {
-  unsigned char pk[crypto_sign_PUBLICKEYBYTES];
-  unsigned char sk[crypto_sign_SECRETKEYBYTES];
-  nacl_crypto_sign_keypair(pk, sk);
-  std::cout << "Sign Keypair: ";
-  print_in_hex_format(pk, crypto_sign_PUBLICKEYBYTES);
-  print_in_hex_format(sk, crypto_sign_SECRETKEYBYTES);
-
-  unsigned char pk2[crypto_sign_PUBLICKEYBYTES];
-  unsigned char sk2[crypto_sign_SECRETKEYBYTES];
-  nacl_crypto_sign_keypair(pk2, sk2);
-  std::cout << "Sign Keypair: ";
-  print_in_hex_format(pk2, crypto_sign_PUBLICKEYBYTES);
-  print_in_hex_format(sk2, crypto_sign_SECRETKEYBYTES);
-
-  unsigned char signed_message[crypto_sign_BYTES + MESSAGE_LEN];
-  unsigned long long signed_message_len;
-  nacl_crypto_sign(signed_message, MESSAGE, MESSAGE_LEN, sk);
-  unsigned char unsigned_message[MESSAGE_LEN];
-  unsigned long long unsigned_message_len;
-  int success = nacl_crypto_sign_open(unsigned_message, signed_message, signed_message_len, pk);
-  if(success == 0)
-    std::cout << "Correct signature" << std::endl;
-  else
-    std::cout << "InCorrect signature" << std::endl;
-  
-  int success2 = nacl_crypto_sign_open(unsigned_message, signed_message, signed_message_len, pk2);
-  if(success2 == 0)
-    std::cout << "Correct signature" << std::endl;
-  else
-    std::cout << "InCorrect signature" << std::endl;
 }
 
 void example_buffer_size_info() {
@@ -265,12 +205,9 @@ int main(void) {
   example_randombytes_buf_deterministic2();
   example_crypto_sign_keypair();
   example_crypto_sign_seed_keypair();
-  //example_crypto_sign();
+  example_crypto_sign(); 
   example_buffer_size_info();
   std::cout << std::endl;
-  
-  Test4();
-  //Test5();
 
   return 0;
 }

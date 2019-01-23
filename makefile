@@ -14,17 +14,17 @@ CC = g++
 CFLAGS = -dynamiclib -g -Wall 
 TARGET = LibSalt
 INCLUDE = -I/usr/local/include/sodium -lsodium 
-TESTS = SimpleTest
+TESTS = LabSaltTest
 CXXTEST = -I/usr/local/include/cxxtest
 
 # -----------------------------------------------------------------------------
 # LIBRARY FILES
 
-# creates LibSalt dylib binary file
+# creates LibSalt dylib binary file (LibSalt.dylib)
 libsalt: 
 	$(CC) $(CFLAGS) -o dist/$(TARGET).dylib $(TARGET).cpp $(INCLUDE) 
 
-# builds a C# library dll for LibSalt.cs
+# builds a C# library dll for LibSalt.cs (LibSalt.dll)
 build_dll:
 	mcs -t:library $(TARGET).cs
 
@@ -38,39 +38,43 @@ example:
 # -----------------------------------------------------------------------------
 # TESTS
 
-# runs cxxtest (make sure to install cxxtest with `brew install cxxtest`)
 tests:
+	make tests_cpp
+	make tests_cs
+	make clean_tests
+
+# runs cxxtest (make sure to install cxxtest with `brew install cxxtest`)
+tests_cpp:
 	cxxtestgen --error-printer -o runner.cpp test/$(TARGET)TestSuite.h 
 	g++ -o runner runner.cpp $(CXXTEST) $(TARGET).cpp $(INCLUDE) 
 	./runner
-	make clean_tests
+
+# runs C# test
+tests_cs:
+	mcs test/$(TESTS).cs $(TARGET).cs
+	mono test/$(TESTS).exe
 
 # compiles and builds executable for C# tests with LabSalt.cs 
-build_tests:
+build_tests_cs:
 	mcs test/$(TESTS).cs $(TARGET).cs
 
 # compiles and builds executable for C# tests with LabSalt.dll
-build_tests_with_dll:
+build_tests_cs_with_dll:
 	mcs test/$(TESTS).cs -r:dist/$(TARGET).dll
-
-# runs C# test
-run_tests:
-	mono test/$(TESTS).exe
 
 # -----------------------------------------------------------------------------
 # CLEAN
 
 # clean and removes complied files
 clean: 
-	rm -f $(TARGET).dylib $(TESTS).exe $(TESTS).dll
-	rm -f $(TARGET)Test.out
+	rm -f dist/$(TARGET).dylib dist/$(TESTS).dll
+	rm -f examples/*.out examples/*.exe
+	rm -f test/*.out test/*.exe
 	rm -f runner runner.cpp
-
-clean_test_cpp:
-	rm -f $(TARGET)Test.out
 
 # clean and removes complied files for test runner
 clean_tests:
+	rm -f test/*.exe
 	rm -f runner runner.cpp
 
 # Building Wrapper

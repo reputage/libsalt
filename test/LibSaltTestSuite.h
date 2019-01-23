@@ -50,14 +50,17 @@ class LibSaltTestSuite : public CxxTest::TestSuite
       TS_ASSERT_EQUALS(sizeof buf2, size);
 
       // Test for generating different randombyte arrays 
-      TS_ASSERT_DIFFERS(buf, buf2);
+      TS_ASSERT_DIFFERENT_DATA(buf, buf2, size);
     } 
 
     void test_randombytes_random(void) {
       std::cout << "\n Testing randombytes_random() .....";
 
       // Test for proper variable size
-      TS_ASSERT_EQUALS(sizeof randombytes_random(), sizeof randombytes_SEEDBYTES);
+      TS_ASSERT_EQUALS(sizeof nacl_randombytes_random(), sizeof randombytes_SEEDBYTES);
+
+      // Tests for randomness
+      TS_ASSERT_DIFFERS(nacl_randombytes_random(), nacl_randombytes_random());
     }
 
     void test_randombytes_buf_deterministic(void) {
@@ -70,16 +73,6 @@ class LibSaltTestSuite : public CxxTest::TestSuite
       nacl_randombytes_buf_deterministic(buf, size, seed);
       nacl_randombytes_buf_deterministic(buf2, size, seed);
       nacl_randombytes_buf_deterministic(buf3, size, seed2);
-
-      /*
-      std::cout << std::endl;
-      std::cout << "Buf1: ";
-      print_in_hex_format(buf, 16);
-      std::cout << std::endl;
-      std::cout << "Buf2: ";
-      print_in_hex_format(buf, 16);
-      std::cout << std::endl;
-      */
 
       TS_ASSERT_EQUALS(sizeof buf, size);
       TS_ASSERT_EQUALS(sizeof buf2, size); 
@@ -111,9 +104,9 @@ class LibSaltTestSuite : public CxxTest::TestSuite
       TS_ASSERT_DIFFERENT_DATA(pk, pk2, crypto_sign_PUBLICKEYBYTES);
       TS_ASSERT_DIFFERENT_DATA(sk, sk2, crypto_sign_SECRETKEYBYTES);
     }
-    
+
     void test_crypto_sign_seed_keypair(void) {
-      std::cout << "\n Testing crypto_sign_seed() .....";
+      std::cout << "\n Testing crypto_sign_seed_keypair() .....";
 
       unsigned char pk[crypto_sign_PUBLICKEYBYTES];
       unsigned char sk[crypto_sign_SECRETKEYBYTES];
@@ -141,15 +134,18 @@ class LibSaltTestSuite : public CxxTest::TestSuite
       unsigned char pk2[crypto_sign_PUBLICKEYBYTES];
       unsigned char sk2[crypto_sign_SECRETKEYBYTES];
 
-      crypto_sign_keypair(pk, sk);
-      crypto_sign_keypair(pk2, sk2);
+      nacl_crypto_sign_keypair(pk, sk);
+      nacl_crypto_sign_keypair(pk2, sk2);
 
+      unsigned long long smlen = crypto_sign_BYTES + mlen;
       unsigned char signed_message[crypto_sign_BYTES + mlen];
-      unsigned long long smlen; 
-      crypto_sign(signed_message, &smlen, message, mlen, sk);
+      unsigned char signed_message2[crypto_sign_BYTES + mlen];
 
-      // Test for proper signed message length
-      TS_ASSERT_EQUALS(smlen, crypto_sign_BYTES + mlen);
+      nacl_crypto_sign(signed_message, message, mlen, sk);
+      nacl_crypto_sign(signed_message2, message, mlen, sk);
+
+      // Test for same signed message for using same secret key to sign 
+      TS_ASSERT_SAME_DATA(signed_message, signed_message2, smlen);
     }
 
     void test_crypto_sign_open(void) {
@@ -162,20 +158,17 @@ class LibSaltTestSuite : public CxxTest::TestSuite
       unsigned char sk[crypto_sign_SECRETKEYBYTES];
       unsigned char pk2[crypto_sign_PUBLICKEYBYTES];
       unsigned char sk2[crypto_sign_SECRETKEYBYTES];
-      crypto_sign_keypair(pk, sk);
-      crypto_sign_keypair(pk2, sk2);
+      nacl_crypto_sign_keypair(pk, sk);
+      nacl_crypto_sign_keypair(pk2, sk2);
 
+      unsigned long long smlen = crypto_sign_BYTES + mlen;
       unsigned char signed_message[crypto_sign_BYTES + mlen];
-      unsigned long long smlen;
-      crypto_sign(signed_message, &smlen, message, mlen, sk);
+      nacl_crypto_sign(signed_message, message, mlen, sk);
 
+      unsigned long long unsigned_message_len = mlen;
       unsigned char unsigned_message[mlen];
-      unsigned long long unsigned_message_len;
-      int success = crypto_sign_open(unsigned_message, &unsigned_message_len,
-                       signed_message, smlen, pk);
-
-      int success2 = crypto_sign_open(unsigned_message, &unsigned_message_len,
-                       signed_message, smlen, pk2);
+      int success = nacl_crypto_sign_open(unsigned_message, signed_message, smlen, pk);
+      int success2 = nacl_crypto_sign_open(unsigned_message, signed_message, smlen, pk2);
 
       // Test for sucessful decoding signed message with correct private key
       TS_ASSERT_EQUALS(success, 0);
