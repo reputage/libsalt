@@ -63,14 +63,16 @@ public class LibSalt {
   [DllImport("dist/LibSalt.dylib")]
   public static extern int nacl_crypto_sign(byte[] sm, byte[] m, ulong mlen, byte[] sk);
 
-  public static int crypto_sign(byte[] sm, byte[] m, ulong mlen, byte[] sk) {
-    return nacl_crypto_sign(sm, m ,mlen, sk);
+  public static int crypto_sign(byte[] sm, byte[] m, byte[] sk) {
+    ulong mlen = (ulong) m.Length;
+    return nacl_crypto_sign(sm, m, mlen, sk);
   }
 
   [DllImport("dist/LibSalt.dylib")]
   public static extern int nacl_crypto_sign_open(byte[] m, byte[] sm, ulong smlen, byte[] pk);
 
-  public static int crypto_sign_open(byte[] m, byte[] sm, ulong smlen, byte[] pk) {
+  public static int crypto_sign_open(byte[] m, byte[] sm, byte[] pk) {
+    ulong smlen = (ulong) sm.Length;
     return nacl_crypto_sign_open(m, sm, smlen, pk);
   }
   
@@ -80,6 +82,4 @@ public class LibSalt {
   public static int crypto_sign_BYTES() {
     return nacl_crypto_sign_BYTES();
   }
-
-
 }

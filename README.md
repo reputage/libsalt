@@ -61,19 +61,19 @@ LibSalt supports functions for:
 
 ### crypto_sign_keypair
 
-`crypto_sign_keypair(byte[] pk, byte[] sk)` randomly generates a secret and private key i.e. `sk` and `pk` respectively
+`crypto_sign_keypair(byte[] pk, byte[] sk)` randomly generates a secret (`sk`) and public (`pk`) key 
 
 ### crypto_sign_seed_keypair
 
-`crypto_sign_seed_keypair(byte[] pk, byte[] sk, byte[] seed)` randomly generates a secret and private key i.e. `sk` and `pk` respectively. Key generated are based off the supplied `seed`, using the same seed will return the same keypair.
+`crypto_sign_seed_keypair(byte[] pk, byte[] sk, byte[] seed)` randomly generates a secret (`sk`) and public (`pk`) key . Keys generated are based off the supplied `seed`, using the same seed will return the same keypair.
 
 ### crypto_sign
 
-`crypto_sign(byte[] sm, byte[] m, ulong mlen, byte[] sk)` prepends a signature to a message using the secret key. `sm` is the reference to the signed message, `m` is the message, `mlen` is the length of the message, and `sk` is the secret key used to sign the message.
+`crypto_sign(byte[] sm, byte[] m, ulong mlen, byte[] sk)` prepends a signature to a message (`m`) using the secret key (`sk`). This generates a signed message in `sm`.
 
 ### crypto_sign_open
 
-`crypto_sign_open(byte[] m, byte[] sm, ulong smlen, byte[] pk)` checkes that the signed message has a valid signature for a given public key. `m` is the reference to the unsigned message, `sm` is a reference to the signed message, `smlen` is the length of the signed message and `pk` is the public key used to check the signature. 
+`crypto_sign_open(byte[] m, byte[] sm, ulong smlen, byte[] pk)` checkes that the signed message (`sm`) has a valid signature for a given public key (`pk`). The valid public key will generate the unsigned message and store it in `m` and will return `0`. An invalid public key will return an non-zero value.
 
 ### crypto_sign_bytes
 

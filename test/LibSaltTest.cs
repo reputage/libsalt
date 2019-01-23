@@ -4,7 +4,6 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-
 public class LibSaltTest {
 
   static void Main() {
@@ -133,7 +132,7 @@ public class Tests {
     LibSalt.randombytes_buf_deterministic(buf, seed);
     LibSalt.randombytes_buf_deterministic(buf2, seed);
     LibSalt.randombytes_buf_deterministic(buf3, seed2);
-    
+
     // Test for generating same randombyte arrays with same seeds
     UnitTest.ASSERT_SAME_DATA(buf, buf2); 
 
@@ -197,8 +196,8 @@ public class Tests {
     byte[] signed_message = new byte[smlen];
     byte[] signed_message2 = new byte[smlen];
 
-    LibSalt.crypto_sign(signed_message, message, mlen, sk);
-    LibSalt.crypto_sign(signed_message2, message, mlen, sk);
+    LibSalt.crypto_sign(signed_message, message, sk);
+    LibSalt.crypto_sign(signed_message2, message, sk);
 
     // Test for proper signed message 
     UnitTest.ASSERT_SAME_DATA(signed_message, signed_message2);
@@ -219,11 +218,11 @@ public class Tests {
 
     ulong smlen = (ulong) LibSalt.crypto_sign_BYTES() + mlen;
     byte[] signed_message = new byte[smlen];
-    LibSalt.crypto_sign(signed_message, message, mlen, sk);
+    LibSalt.crypto_sign(signed_message, message, sk);
 
     byte[] unsigned_message = new byte[mlen];
-    int success = LibSalt.crypto_sign_open(unsigned_message, signed_message, smlen, pk);
-    int success2 = LibSalt.crypto_sign_open(unsigned_message, signed_message, smlen, pk2);
+    int success = LibSalt.crypto_sign_open(unsigned_message, signed_message, pk);
+    int success2 = LibSalt.crypto_sign_open(unsigned_message, signed_message, pk2);
 
     // Test for sucessful decoding signed message with correct private key
     UnitTest.ASSERT_EQUALS(success, 0);

@@ -120,15 +120,15 @@ public class Examples {
 
     ulong smlen = (ulong) LibSalt.crypto_sign_BYTES() + mlen;
     byte[] signed_message = new byte[smlen];
-    LibSalt.crypto_sign(signed_message, message, mlen, sk);
+    LibSalt.crypto_sign(signed_message, message, sk);
 
     Console.WriteLine("Public Key: " + LibSalt.ByteArrayToString(pk));
     Console.WriteLine("Signed Message: " + LibSalt.ByteArrayToString(signed_message)); 
 
     byte[] unsigned_message = new byte[mlen];
     byte[] unsigned_message2 = new byte[mlen];
-    int success = LibSalt.crypto_sign_open(unsigned_message, signed_message, smlen, pk);
-    int success2 = LibSalt.crypto_sign_open(unsigned_message2, signed_message, smlen, pk2);  
+    int success = LibSalt.crypto_sign_open(unsigned_message, signed_message, pk);
+    int success2 = LibSalt.crypto_sign_open(unsigned_message2, signed_message, pk2);  
 
     Console.WriteLine("Unsigned Message: " + LibSalt.ByteArrayToString(unsigned_message)); 
     Console.WriteLine("Signature Verification for pk: " + LibSalt.ByteArrayToString(pk)); 
