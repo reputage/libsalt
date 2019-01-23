@@ -24,23 +24,25 @@ public class LibSalt {
   public static extern void FillArray(int[] buf, int size);
 
   [DllImport("dist/LibSalt.dylib")]
-  public static extern int nacl_randombytes_random();
+  public static extern uint nacl_randombytes_random();
 
-  public static int randombytes_random() {
+  public static uint randombytes_random() {
     return nacl_randombytes_random();
   }
 
   [DllImport("dist/LibSalt.dylib")]
-  public static extern void nacl_randombytes(byte[] buf, int size);
+  public static extern void nacl_randombytes_buf(byte[] buf, int size); 
 
-  public static void randombytes_buf(byte[] buf, int size) {
-    nacl_randombytes(buf, size);
+  public static void randombytes_buf(byte[] buf) {
+    int size = buf.Length;
+    nacl_randombytes_buf(buf, size);
   }
 
   [DllImport("dist/LibSalt.dylib")]
   public static extern void nacl_randombytes_buf_deterministic(byte[] buf, int size, byte[] seed);
 
-  public static void randombytes_buf_deterministic(byte[] buf, int size, byte[] seed) {
+  public static void randombytes_buf_deterministic(byte[] buf, byte[] seed) {
+    int size = buf.Length;
     nacl_randombytes_buf_deterministic(buf, size, seed);
   }
 

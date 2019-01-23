@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 
-public class LabSaltTest {
+public class LibSaltTest {
 
   static void Main() {
     Console.WriteLine ("LibSalt UnitTest.");    
@@ -117,8 +117,8 @@ public class Tests {
     byte[] buf = new byte[size];
     byte[] buf2 = new byte[size];
 
-    LibSalt.randombytes_buf(buf, size);
-    LibSalt.randombytes_buf(buf2, size);
+    LibSalt.randombytes_buf(buf);
+    LibSalt.randombytes_buf(buf2);
 
     UnitTest.ASSERT_DIFFERENT_DATA(buf, buf2);
   }
@@ -130,10 +130,10 @@ public class Tests {
     byte[] buf = new byte[size];
     byte[] buf2 = new byte[size];
     byte[] buf3 = new byte[size];
-    LibSalt.randombytes_buf_deterministic(buf, size, seed);
-    LibSalt.randombytes_buf_deterministic(buf2, size, seed);
-    LibSalt.randombytes_buf_deterministic(buf3, size, seed2);
-
+    LibSalt.randombytes_buf_deterministic(buf, seed);
+    LibSalt.randombytes_buf_deterministic(buf2, seed);
+    LibSalt.randombytes_buf_deterministic(buf3, seed2);
+    
     // Test for generating same randombyte arrays with same seeds
     UnitTest.ASSERT_SAME_DATA(buf, buf2); 
 
@@ -220,7 +220,7 @@ public class Tests {
     ulong smlen = (ulong) LibSalt.crypto_sign_BYTES() + mlen;
     byte[] signed_message = new byte[smlen];
     LibSalt.crypto_sign(signed_message, message, mlen, sk);
-    
+
     byte[] unsigned_message = new byte[mlen];
     int success = LibSalt.crypto_sign_open(unsigned_message, signed_message, smlen, pk);
     int success2 = LibSalt.crypto_sign_open(unsigned_message, signed_message, smlen, pk2);

@@ -1,8 +1,8 @@
 // LibSaltTestSuite.h
 
 #include "sodium.h"
-#include "../LibSalt.h"
-#include <string>
+#include "../libsalt/LibSalt.h"
+#include <string> 
 #include <iostream>
 #include <typeinfo>
 #include <cxxtest/TestSuite.h>
@@ -42,8 +42,8 @@ class LibSaltTestSuite : public CxxTest::TestSuite
       int size = 16;
       unsigned char buf[size];
       unsigned char buf2[size];
-      nacl_randombytes(buf, size);
-      nacl_randombytes(buf2, size);
+      nacl_randombytes_buf(buf, size);
+      nacl_randombytes_buf(buf2, size);
 
       // Test for proper array size
       TS_ASSERT_EQUALS(sizeof buf, size);

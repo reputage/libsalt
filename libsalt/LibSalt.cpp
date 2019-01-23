@@ -13,7 +13,7 @@ extern "C" unsigned int nacl_randombytes_random() {
     return randombytes_random();
 }
 
-extern "C" void nacl_randombytes(unsigned char buf[], int size) {
+extern "C" void nacl_randombytes_buf(unsigned char buf[], int size) {
 
   if(sodium_init() < 0) {
     return;

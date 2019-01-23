@@ -1,7 +1,7 @@
 
-extern "C" int nacl_randombytes_random();
+extern "C" unsigned int nacl_randombytes_random();
 
-extern "C" void nacl_randombytes(unsigned char * buf, int size);
+extern "C" void nacl_randombytes_buf(unsigned char * buf, int size);
 
 extern "C" void nacl_randombytes_buf_deterministic(unsigned char * buf, int size, unsigned char * seed);
 

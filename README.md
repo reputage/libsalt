@@ -1,11 +1,11 @@
 
 # LibSalt
 
-LibSalt is simple C# wrapper library for Daniel J. Bernstein's nacl library via libsodium. This library only depends on C# and libsodium, and has no dependances on the .NET library. 
+LibSalt is simple C# wrapper library for Daniel J. Bernstein's nacl library via libsodium. This library only depends on C# and libsodium, and has no other dependances. 
 
 ## Features
 
-Libsodium is a simple library that only requires two files for installation for any C# project (on Mac).
+Libsalt is a simple library. You can integrate libsalt into any C# project using either ```LibSalt.dylib``` with ```LibSalt.cs``` or with the ```LibSalt.dll```. These files are given with each release or can be built locally on Mac.
 
 ## Basic Installation
 
@@ -19,7 +19,7 @@ From the ```\dist``` folder you'll need ```LibSalt.dylib``` and ```LibSalt.cs```
 
 To build the binaries locally use the make file:
 
-``` make libsalt ```
+``` make build ```
 
 This is will generate ```LibSalt.dylib``` in the ```\dist``` director. This along with LibSalt.cs is need to use the library.
 
@@ -33,9 +33,9 @@ To build and run tests for bindings:
 
 LibSalt supports functions for:
 
--Generating random data
--Public key pair generation
--Public-key signature generation
+- Generating random data
+- Public key pair generation
+- Public-key signature generation
 
 These are the currenlty supprted libsodium functions:
 
