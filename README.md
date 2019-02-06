@@ -69,11 +69,11 @@ LibSalt supports functions for:
 
 ### crypto_sign
 
-`crypto_sign(byte[] sm, byte[] m, ulong mlen, byte[] sk)` prepends a signature to a message (`m`) using the secret key (`sk`). This generates a signed message in `sm`.
+`crypto_sign(byte[] sm, byte[] m, byte[] sk)` prepends a signature to a message (`m`) using the secret key (`sk`). This generates a signed message in `sm`.
 
 ### crypto_sign_open
 
-`crypto_sign_open(byte[] m, byte[] sm, ulong smlen, byte[] pk)` checkes that the signed message (`sm`) has a valid signature for a given public key (`pk`). The valid public key will generate the unsigned message and store it in `m` and will return `0`. An invalid public key will return an non-zero value.
+`crypto_sign_open(byte[] m, byte[] sm, byte[] pk)` checkes that the signed message (`sm`) has a valid signature for a given public key (`pk`). The valid public key will generate the unsigned message and store it in `m` and will return `0`. An invalid public key will return an non-zero value.
 
 ### crypto_sign_bytes
 
