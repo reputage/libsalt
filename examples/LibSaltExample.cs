@@ -15,6 +15,7 @@ public class Examples {
   private int crypto_sign_SECRETKEYBYTES = 64;
 
   public void Run() {
+    examples_constants(); 
     example_randombytes_random();
     example_randombytes_buf(); 
     example_randombytes_buf(); 
@@ -23,6 +24,11 @@ public class Examples {
     example_crypto_sign_keypair();
     example_crypto_sign_seed_keypair();
     example_crypto_sign();
+  }
+  
+  public void examples_constants() {
+    Console.WriteLine("Example: randombytes_SEEDBYTES()");
+    Console.WriteLine(LibSalt.randombytes_SEEDBYTES().ToString());
   }
 
   public void example_randombytes_random() {

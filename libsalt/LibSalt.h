@@ -14,3 +14,5 @@ extern "C" int nacl_crypto_sign(unsigned char *sm, const unsigned char *m, unsig
 extern "C" int nacl_crypto_sign_open(unsigned char *m, const unsigned char *sm, unsigned long long smlen, const unsigned char *pk);
 
 extern "C" int nacl_crypto_sign_BYTES();
+
+extern "C" int nacl_randombytes_SEEDBYTES();

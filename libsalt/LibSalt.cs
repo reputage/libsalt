@@ -82,4 +82,11 @@ public class LibSalt {
   public static int crypto_sign_BYTES() {
     return nacl_crypto_sign_BYTES();
   }
+
+  [DllImport("dist/LibSalt.dylib")]
+  public static extern int nacl_randombytes_SEEDBYTES();
+
+  public static int randombytes_SEEDBYTES() {
+    return nacl_randombytes_SEEDBYTES();
+  }
 }

@@ -99,7 +99,7 @@ public class Tests {
     test_crypto_sign_open();
 
     stopwatch.Stop(); 
-
+    
     Console.WriteLine("Ran 7 tests in " + stopwatch.ElapsedMilliseconds.ToString() + " ms");
   }
 

@@ -75,3 +75,12 @@ extern "C" int nacl_crypto_sign_BYTES() {
 
   return crypto_sign_bytes();
 }
+
+extern "C" int nacl_randombytes_SEEDBYTES() {
+  if(sodium_init() < 0) {
+    return -1;
+  }
+
+  return randombytes_seedbytes();
+}
+
