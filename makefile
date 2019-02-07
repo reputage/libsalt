@@ -11,7 +11,7 @@ CC = g++
 #  -g           adds debugging information to the executable file
 #  -Wall        turns on most, but not all, compiler warnings
 
-CFLAGS = -dynamiclib -Wall
+CFLAGS = -dynamiclib -Wall 
 TARGET = LibSalt
 INCLUDE = -I/usr/local/include/sodium -lsodium -I/libsalt
 TESTS = LibSaltTest
@@ -22,6 +22,7 @@ CXXTEST = -I/usr/local/include/cxxtest
 
 # creates LibSalt dylib binary file (LibSalt.dylib) and C# dll (LibSalt.dll)
 build: 
+	mkdir -p dist
 	cp libsalt/$(TARGET).cs dist/$(TARGET).cs 
 	$(CC) $(CFLAGS) -o dist/$(TARGET).dylib libsalt/$(TARGET).cpp $(INCLUDE) 
 	mcs -t:library dist/$(TARGET).cs
@@ -45,7 +46,7 @@ example_cpp:
 
 # runs C# unit tests
 tests:
-	mcs test/$(TESTS).cs -r:dist/$(TARGET).dll
+	mcs test/$(TESTS).cs dist/$(TARGET).cs
 	mono test/$(TARGET)Test.exe 
 	make clean_tests
 
